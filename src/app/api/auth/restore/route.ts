@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { isEmail, normalizeEmail } from "../../../../lib/commerce/email";
 import { grantsForEmail } from "../../../../lib/commerce/lookup";
 import { issueRestoreToken } from "../../../../lib/commerce/restore-tokens";
-import { emailService } from "../../../../lib/email/service";
 import { siteOrigin } from "../../../../lib/stripe";
 
 export const runtime = "nodejs";
@@ -17,26 +16,21 @@ export async function POST(req: Request) {
     }
 
     const grants = await grantsForEmail(email);
-    // Same response whether or not we found a purchase — don't leak.
-    const generic = {
-      ok: true,
-      message: "If we find a purchase for that email, you’ll get a restore link. It expires in 30 minutes.",
-    };
-
     if (grants.length === 0) {
-      return NextResponse.json(generic);
+      return NextResponse.json({
+        ok: true,
+        message: "If we find a purchase for that email, you’ll get a restore link here.",
+      });
     }
 
     const token = await issueRestoreToken(email, grants);
     const origin = siteOrigin(req);
     const url = `${origin}/restore/confirm?token=${encodeURIComponent(token)}`;
-    const sent = await emailService.sendRestoreLink({ email, url });
 
     return NextResponse.json({
-      ...generic,
-      emailed: sent.sent,
-      // Shown only when email isn't configured so you can still restore locally.
-      restoreUrl: sent.sent ? undefined : url,
+      ok: true,
+      message: "We found a purchase. Open the link below on this device. It expires in 30 minutes.",
+      restoreUrl: url,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Could not start restore.";

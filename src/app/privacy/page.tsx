@@ -58,8 +58,8 @@ export default function PrivacyPage() {
           <h2 className="font-serif text-2xl text-ink">Email</h2>
           <p>
             Email is optional except at Stripe Checkout if you buy something. You may also type an email to send
-            yourself a calculator snapshot or to restore a purchase. Restore looks up paid checkouts for that address.
-            If we later send restore links by email, that message goes only to the address you entered.
+            yourself a calculator snapshot, or on Restore to look up paid checkouts for that address. Restore shows a
+            one-time link on the page after that check — we don’t email the link.
           </p>
         </section>
 

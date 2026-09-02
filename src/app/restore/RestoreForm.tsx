@@ -25,7 +25,7 @@ export function RestoreForm() {
         body: JSON.stringify({ email }),
       });
       const raw = await res.text();
-      let data: { error?: string; message?: string; restoreUrl?: string; emailed?: boolean } = {};
+      let data: { error?: string; message?: string; restoreUrl?: string } = {};
       try {
         data = raw ? (JSON.parse(raw) as typeof data) : {};
       } catch {
@@ -35,11 +35,7 @@ export function RestoreForm() {
         setError(data.error ?? "Could not start restore.");
         return;
       }
-      setMessage(
-        data.emailed
-          ? "Check that inbox for a restore link. It expires in 30 minutes."
-          : (data.message ?? "If we find a purchase, use the link below."),
-      );
+      setMessage(data.message ?? "If we find a purchase, you’ll get a restore link here.");
       if (data.restoreUrl) setRestoreUrl(data.restoreUrl);
     } catch {
       setError("Could not start restore. Try again.");
@@ -53,7 +49,8 @@ export function RestoreForm() {
       <p className="text-sm font-medium uppercase tracking-wide text-teal">Restore</p>
       <h1 className="mt-2 font-serif text-4xl tracking-tight">Already paid? Bring it to this device.</h1>
       <p className="mt-3 text-muted">
-        Use the same email you entered at Stripe Checkout. We’ll send a one-time link. No password.
+        Use the same email you entered at Stripe Checkout. If we find a purchase, you’ll get a one-time link on this
+        page. No password.
       </p>
       <form onSubmit={submit} className="mt-8 space-y-4">
         <Field label="Email from your receipt">
@@ -67,15 +64,16 @@ export function RestoreForm() {
         </Field>
         {error ? <p className="text-sm text-red-fg">{error}</p> : null}
         <Button type="submit" disabled={busy}>
-          {busy ? "Checking…" : "Email me a restore link"}
+          {busy ? "Checking…" : "Check this email"}
         </Button>
       </form>
       {message ? <p className="mt-6 text-sm text-ink">{message}</p> : null}
       {restoreUrl ? (
-        <p className="mt-3 text-sm text-muted">
-          Email sending isn’t configured yet, so here’s your link — open it on the phone or computer you want to
-          use.{" "}
-          <a href={restoreUrl} className="font-medium text-navy underline-offset-2 hover:underline">
+        <p className="mt-4">
+          <a
+            href={restoreUrl}
+            className="inline-flex h-11 items-center justify-center rounded-xl bg-navy px-4 text-sm font-medium text-white hover:bg-navy-deep"
+          >
             Restore on this device
           </a>
         </p>
