@@ -24,12 +24,13 @@ export function RestoreForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      const data = (await res.json()) as {
-        error?: string;
-        message?: string;
-        restoreUrl?: string;
-        emailed?: boolean;
-      };
+      const raw = await res.text();
+      let data: { error?: string; message?: string; restoreUrl?: string; emailed?: boolean } = {};
+      try {
+        data = raw ? (JSON.parse(raw) as typeof data) : {};
+      } catch {
+        data = { error: "Could not start restore." };
+      }
       if (!res.ok) {
         setError(data.error ?? "Could not start restore.");
         return;

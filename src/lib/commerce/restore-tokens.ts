@@ -1,6 +1,5 @@
-import { createHash, randomBytes } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { readEnv } from "../stripe";
 
 export type RestoreToken = {
   hash: string;
@@ -10,48 +9,59 @@ export type RestoreToken = {
   used: boolean;
 };
 
-const FILE = path.join(process.cwd(), ".data", "restore-tokens.json");
 const TTL_MS = 30 * 60 * 1000;
 
-function hashToken(token: string): string {
-  return createHash("sha256").update(token).digest("hex");
+function signingKey(): string {
+  const key = readEnv("STRIPE_SECRET_KEY");
+  if (!key) throw new Error("Missing STRIPE_SECRET_KEY for restore links.");
+  return key;
 }
 
-async function readAll(): Promise<RestoreToken[]> {
-  try {
-    const raw = await readFile(FILE, "utf8");
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? (parsed as RestoreToken[]) : [];
-  } catch {
-    return [];
-  }
+function b64url(input: string | Buffer): string {
+  return Buffer.from(input).toString("base64url");
 }
 
-async function writeAll(rows: RestoreToken[]): Promise<void> {
-  await mkdir(path.dirname(FILE), { recursive: true });
-  await writeFile(FILE, JSON.stringify(rows, null, 2));
+function sign(payloadB64: string): string {
+  return createHmac("sha256", signingKey()).update(`v1.${payloadB64}`).digest("base64url");
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  if (left.length !== right.length) return false;
+  return timingSafeEqual(left, right);
 }
 
 export async function issueRestoreToken(email: string, grants: string[]): Promise<string> {
-  const token = randomBytes(32).toString("hex");
-  const rows = await readAll();
-  rows.push({
-    hash: hashToken(token),
+  const payload = JSON.stringify({
     email,
     grants,
     exp: Date.now() + TTL_MS,
-    used: false,
   });
-  await writeAll(rows);
-  return token;
+  const payloadB64 = b64url(payload);
+  return `v1.${payloadB64}.${sign(payloadB64)}`;
 }
 
 export async function consumeRestoreToken(token: string): Promise<RestoreToken | null> {
-  const hash = hashToken(token);
-  const rows = await readAll();
-  const row = rows.find((r) => r.hash === hash);
-  if (!row || row.used || row.exp < Date.now()) return null;
-  row.used = true;
-  await writeAll(rows);
-  return row;
+  const parts = token.trim().split(".");
+  if (parts.length !== 3 || parts[0] !== "v1") return null;
+  const [, payloadB64, mac] = parts;
+  if (!payloadB64 || !mac || !safeEqual(mac, sign(payloadB64))) return null;
+
+  let parsed: { email?: string; grants?: unknown; exp?: number };
+  try {
+    parsed = JSON.parse(Buffer.from(payloadB64, "base64url").toString("utf8")) as typeof parsed;
+  } catch {
+    return null;
+  }
+  if (!parsed.email || typeof parsed.exp !== "number" || parsed.exp < Date.now()) return null;
+  if (!Array.isArray(parsed.grants)) return null;
+
+  return {
+    hash: mac,
+    email: parsed.email,
+    grants: parsed.grants.filter((g): g is string => typeof g === "string"),
+    exp: parsed.exp,
+    used: false,
+  };
 }
