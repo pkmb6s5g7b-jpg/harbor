@@ -6,6 +6,9 @@ import { expandGrants, hasAccess, parseEntitlementCookie, serializeEntitlements 
 import { recordPurchase } from "../../../../lib/commerce/purchases";
 import { getStripe, stripeConfigured } from "../../../../lib/stripe";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const body = (await req.json()) as { session_id?: string };
   const sessionId = body.session_id?.trim();

@@ -11,7 +11,7 @@ import { getStripe } from "../../../../lib/stripe";
  * Then copy the whsec_… signing secret into STRIPE_WEBHOOK_SECRET.
  */
 export async function POST(req: Request) {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  const secret = process.env["STRIPE_WEBHOOK_SECRET"]?.trim();
   if (!secret) {
     return NextResponse.json({ error: "STRIPE_WEBHOOK_SECRET is not set" }, { status: 501 });
   }

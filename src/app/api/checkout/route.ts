@@ -4,6 +4,9 @@ import { STRIPE_CHECKOUT_OFFER_IDS } from "../../../config/pricing";
 import { resolveOffer } from "../../../lib/commerce/resolve-offer";
 import { getStripe, getStripePriceId, siteOrigin, stripeConfigured } from "../../../lib/stripe";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const body = (await req.json()) as { offerId?: string };
   const offerId = body.offerId ?? "";
