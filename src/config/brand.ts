@@ -5,7 +5,7 @@ export const brand = {
     "Free calculators for debt payoff, paycheck budgeting, and cash flow. Full Excel and Google Sheets templates are paid — or grab the bundle.",
   proPrice: 19,
   proPriceLabel: "$19",
-  url: "https://harbor.example",
+  url: "https://harbor-blush-two.vercel.app",
 } as const;
 
 export const storageKeys = {

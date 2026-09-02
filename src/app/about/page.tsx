@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { brand } from "../../config/brand";
 import { Container } from "../../components/layout/Container";
 import { ButtonLink } from "../../components/ui/Button";
@@ -30,6 +31,17 @@ export default function AboutPage() {
         <p>
           Nothing here is financial advice. If a minimum payment doesn’t cover interest, the calculator will say so.
           That’s a math warning, not a product pitch.
+        </p>
+        <p>
+          How we handle numbers, email, and Stripe is in{" "}
+          <Link href="/privacy" className="font-medium text-navy underline-offset-2 hover:underline">
+            Privacy
+          </Link>
+          . Buying Pro or a template is covered by{" "}
+          <Link href="/terms" className="font-medium text-navy underline-offset-2 hover:underline">
+            Terms
+          </Link>
+          .
         </p>
       </div>
       <div className="mt-10 flex flex-wrap gap-3">

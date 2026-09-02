@@ -70,13 +70,31 @@ export function Footer() {
                 About
               </Link>
             </li>
+            <li>
+              <Link href="/privacy" className="text-ink hover:text-navy">
+                Privacy
+              </Link>
+            </li>
+            <li>
+              <Link href="/terms" className="text-ink hover:text-navy">
+                Terms
+              </Link>
+            </li>
           </ul>
         </div>
       </Container>
       <div className="border-t border-line-soft">
         <Container className="flex flex-col gap-2 py-4 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} {brand.name}</span>
-          <span>Free calculators. Paid spreadsheet templates. Bundle is the best value.</span>
+          <span className="flex flex-wrap gap-x-3 gap-y-1">
+            <Link href="/privacy" className="hover:text-navy">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-navy">
+              Terms
+            </Link>
+            <span>Free calculators. Paid templates. Bundle is the best value.</span>
+          </span>
         </Container>
       </div>
     </footer>
