@@ -39,8 +39,11 @@ export async function POST(req: Request) {
   return NextResponse.json({ ok: true, owned: merged, downloads: "/downloads?paid=1" });
 }
 
-/** Clears this browser’s download cookie so you can test Checkout again. */
+/** Clears this browser’s download cookie so you can test Checkout again. Local only. */
 export async function DELETE() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const jar = await cookies();
   jar.delete(ENTITLEMENT_COOKIE);
   return NextResponse.json({ ok: true });
