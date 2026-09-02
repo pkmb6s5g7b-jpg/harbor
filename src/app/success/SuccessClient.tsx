@@ -100,7 +100,7 @@ export function SuccessClient() {
               <ButtonLink href="/plans" variant="secondary">
                 Saved plans
               </ButtonLink>
-              <ButtonLink href="/spreadsheets" variant="secondary">
+              <ButtonLink href="/templates" variant="secondary">
                 Spreadsheet templates
               </ButtonLink>
             </div>
@@ -132,7 +132,7 @@ export function SuccessClient() {
           </h1>
           <p className="mt-3 max-w-xl text-muted">{message}</p>
           <div className="mt-6 flex flex-wrap gap-2">
-            <ButtonLink href="/spreadsheets">Back to templates</ButtonLink>
+            <ButtonLink href="/templates">Back to templates</ButtonLink>
             <ButtonLink href="/downloads" variant="secondary">
               Downloads
             </ButtonLink>

@@ -44,7 +44,7 @@ export default function HomePage() {
               <ButtonLink href="/tools/paycheck-budget" size="lg">
                 Try a calculator
               </ButtonLink>
-              <ButtonLink href="/spreadsheets" variant="secondary" size="lg">
+              <ButtonLink href="/templates" variant="secondary" size="lg">
                 Paid templates
               </ButtonLink>
             </div>

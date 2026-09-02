@@ -14,7 +14,7 @@ import { Logo } from "./Logo";
 const links = [
   { href: "/tools", label: "Tools" },
   { href: "/plans", label: "Plans" },
-  { href: "/spreadsheets", label: "Templates" },
+  { href: "/templates", label: "Templates" },
   { href: "/pricing", label: "Pricing" },
   { href: "/downloads", label: "Downloads" },
   { href: "/restore", label: "Restore" },

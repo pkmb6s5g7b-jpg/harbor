@@ -35,7 +35,7 @@ export default function ToolsPage() {
 
       <p className="mt-10 text-sm text-muted">
         Want the Excel & Google Sheets version after you run a plan?{" "}
-        <Link href="/spreadsheets" className="font-medium text-navy underline-offset-2 hover:underline">
+        <Link href="/templates" className="font-medium text-navy underline-offset-2 hover:underline">
           See paid templates
         </Link>
         .

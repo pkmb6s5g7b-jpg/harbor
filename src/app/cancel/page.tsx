@@ -17,7 +17,7 @@ export default function CancelPage() {
         you want them.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <ButtonLink href="/spreadsheets">Back to templates</ButtonLink>
+        <ButtonLink href="/templates">Back to templates</ButtonLink>
         <ButtonLink href="/pricing" variant="secondary">
           See pricing
         </ButtonLink>

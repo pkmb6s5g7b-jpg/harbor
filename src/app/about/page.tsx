@@ -46,7 +46,7 @@ export default function AboutPage() {
       </div>
       <div className="mt-10 flex flex-wrap gap-3">
         <ButtonLink href="/tools/paycheck-budget">Open a calculator</ButtonLink>
-        <ButtonLink href="/spreadsheets" variant="secondary">
+        <ButtonLink href="/templates" variant="secondary">
           Browse paid templates
         </ButtonLink>
       </div>

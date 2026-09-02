@@ -36,7 +36,7 @@ export function Footer() {
           <p className="text-xs font-medium uppercase tracking-wide text-muted">More</p>
           <ul className="mt-3 space-y-2 text-sm">
             <li>
-              <Link href="/spreadsheets" className="text-ink hover:text-navy">
+              <Link href="/templates" className="text-ink hover:text-navy">
                 Templates
               </Link>
             </li>

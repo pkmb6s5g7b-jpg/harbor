@@ -70,7 +70,7 @@ export function SpreadsheetCard({
       <BuyButton offer={offer} className="mt-4 w-full" />
       <p className="mt-2 text-center text-xs text-muted">
         Or the all-3 bundle for {formatPrice(PRICES.bundle)}.{" "}
-        <a href="/spreadsheets" className="text-navy underline-offset-2 hover:underline">
+        <a href="/templates" className="text-navy underline-offset-2 hover:underline">
           See templates
         </a>
       </p>

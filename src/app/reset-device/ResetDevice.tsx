@@ -41,7 +41,7 @@ export function ResetDevice() {
       {done ? (
         <div className="mt-8 flex flex-wrap gap-2">
           <ButtonLink href="/pricing">Unlock Pro</ButtonLink>
-          <ButtonLink href="/spreadsheets" variant="secondary">
+          <ButtonLink href="/templates" variant="secondary">
             Buy a template
           </ButtonLink>
         </div>

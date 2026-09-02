@@ -20,7 +20,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Debt Payoff Tracker & Schedule",
     blurb:
       "Snowball or Avalanche for up to eight debts, a 120-month schedule, payment log, and a side-by-side comparison.",
-    href: "/spreadsheets#debt-payoff-tracker",
+    href: "/templates#debt-payoff-tracker",
     fileName: "Debt-Payoff-Tracker-Schedule.xlsx",
     relatedToolHref: "/tools/debt-payoff",
     core: true,
@@ -35,7 +35,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Paycheck Budget + Bill Tracker",
     blurb:
       "Budget by paycheck. Recurring bills, category actuals, a transaction log, and leftover after bills and after the plan.",
-    href: "/spreadsheets#paycheck-budget-tracker",
+    href: "/templates#paycheck-budget-tracker",
     fileName: "Paycheck-Budget-Bill-Tracker.xlsx",
     relatedToolHref: "/tools/paycheck-budget",
     core: true,
@@ -50,7 +50,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Cash Flow Forecast Spreadsheet",
     blurb:
       "Monthly running balance, one-time hits, and a 12-month chart. The keep-using version of the free forecast.",
-    href: "/spreadsheets#cash-flow-forecast",
+    href: "/templates#cash-flow-forecast",
     fileName: "Cash-Flow-Forecast.xlsx",
     relatedToolHref: "/tools/cash-flow",
     core: true,
@@ -61,7 +61,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Online Seller Profit Tracker",
     blurb:
       "Etsy, Shopify, Gumroad, and similar shops. Track sales, fees, COGS, and what you actually keep.",
-    href: "/spreadsheets#online-seller-profit-tracker",
+    href: "/templates#online-seller-profit-tracker",
     fileName: "Online-Seller-Profit-Tracker.xlsx",
     relatedToolHref: null,
     core: false,
@@ -73,7 +73,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Transaction Reconciliation Matcher",
     blurb:
       "Match two lists — bank vs books, card vs expense log — and see matched, unmatched, and amount differences.",
-    href: "/spreadsheets#transaction-reconciliation-matcher",
+    href: "/templates#transaction-reconciliation-matcher",
     fileName: "Transaction-Reconciliation-Matcher.xlsx",
     relatedToolHref: null,
     core: false,
@@ -85,7 +85,7 @@ export const products: SpreadsheetProduct[] = [
     name: "Project Management Tracker",
     blurb:
       "Projects, tasks, milestones, and an 18-week Gantt. Built for a small team that lives in a spreadsheet.",
-    href: "/spreadsheets#project-management-tracker",
+    href: "/templates#project-management-tracker",
     fileName: "Project-Management-Tracker.xlsx",
     relatedToolHref: null,
     core: false,

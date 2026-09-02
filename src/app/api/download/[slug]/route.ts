@@ -16,7 +16,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ slug: string }
   const owned = parseEntitlementCookie(jar.get(ENTITLEMENT_COOKIE)?.value);
   if (!hasAccess(owned, slug)) {
     return NextResponse.json(
-      { error: "Payment required", buy: `/spreadsheets#${slug}` },
+      { error: "Payment required", buy: `/templates#${slug}` },
       { status: 402 },
     );
   }
