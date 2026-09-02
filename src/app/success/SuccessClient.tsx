@@ -31,12 +31,13 @@ export function SuccessClient() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ session_id: sessionId }),
         });
-        const data = (await res.json()) as {
-          paid?: boolean;
-          grants?: string[];
-          files?: FileRow[];
-          error?: string;
-        };
+        const raw = await res.text();
+        let data: { paid?: boolean; grants?: string[]; files?: FileRow[]; error?: string } = {};
+        try {
+          data = raw ? (JSON.parse(raw) as typeof data) : {};
+        } catch {
+          data = { error: `Could not confirm this payment (${res.status}).` };
+        }
         if (cancelled) return;
         if (!res.ok || !data.paid) {
           setStatus(res.status === 402 ? "unpaid" : "error");

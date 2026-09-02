@@ -24,11 +24,16 @@ async function readAll(): Promise<PurchaseRecord[]> {
 }
 
 export async function recordPurchase(row: PurchaseRecord): Promise<void> {
-  const all = await readAll();
-  if (all.some((p) => p.sessionId === row.sessionId)) return;
-  all.push(row);
-  await mkdir(path.dirname(FILE), { recursive: true });
-  await writeFile(FILE, JSON.stringify(all, null, 2));
+  try {
+    const all = await readAll();
+    if (all.some((p) => p.sessionId === row.sessionId)) return;
+    all.push(row);
+    await mkdir(path.dirname(FILE), { recursive: true });
+    await writeFile(FILE, JSON.stringify(all, null, 2));
+  } catch (err) {
+    // Vercel’s filesystem is read-only except /tmp. Unlock still uses Stripe + cookies.
+    console.error("recordPurchase skipped", err);
+  }
 }
 
 export async function findPurchase(sessionId: string): Promise<PurchaseRecord | undefined> {
