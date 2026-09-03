@@ -18,6 +18,9 @@ export async function GET() {
       cashflow: present("STRIPE_PRICE_CASHFLOW"),
       bundle: present("STRIPE_PRICE_BUNDLE"),
       pro: present("STRIPE_PRICE_PRO"),
+      seller: present("STRIPE_PRICE_SELLER"),
+      reconcile: present("STRIPE_PRICE_RECONCILE"),
+      project: present("STRIPE_PRICE_PROJECT"),
     },
     siteUrl: present("NEXT_PUBLIC_SITE_URL"),
   });

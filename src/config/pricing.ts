@@ -5,6 +5,7 @@
  * Stripe Price IDs live in env vars (see STRIPE_PRICE_ENV). Never put secret keys here.
  *
  * STRIPE_PRICE_DEBT, STRIPE_PRICE_PAYCHECK, STRIPE_PRICE_CASHFLOW, STRIPE_PRICE_BUNDLE, STRIPE_PRICE_PRO
+ * STRIPE_PRICE_SELLER, STRIPE_PRICE_RECONCILE, STRIPE_PRICE_PROJECT
  */
 export const PRICES = {
   spreadsheet: 14,
@@ -42,6 +43,9 @@ export const STRIPE_PRICE_ENV: Record<string, string> = {
   "debt-payoff-tracker": "STRIPE_PRICE_DEBT",
   "paycheck-budget-tracker": "STRIPE_PRICE_PAYCHECK",
   "cash-flow-forecast": "STRIPE_PRICE_CASHFLOW",
+  "online-seller-profit-tracker": "STRIPE_PRICE_SELLER",
+  "transaction-reconciliation-matcher": "STRIPE_PRICE_RECONCILE",
+  "project-management-tracker": "STRIPE_PRICE_PROJECT",
 };
 
 export const offers: Record<string, Offer> = {
@@ -89,5 +93,8 @@ export const STRIPE_CHECKOUT_OFFER_IDS = [
   "debt-payoff-tracker",
   "paycheck-budget-tracker",
   "cash-flow-forecast",
+  "online-seller-profit-tracker",
+  "transaction-reconciliation-matcher",
+  "project-management-tracker",
   "core-bundle",
 ] as const;

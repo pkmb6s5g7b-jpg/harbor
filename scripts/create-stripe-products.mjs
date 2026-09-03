@@ -1,6 +1,5 @@
 /**
- * Creates the five test-mode Stripe products/prices and prints Price IDs
- * to paste into .env.local.
+ * Creates Stripe products/prices and prints Price IDs to paste into env.
  *
  *   export PATH="$HOME/.local/node/bin:$PATH"
  *   set -a && source .env.local && set +a   # if the file exists
@@ -41,6 +40,22 @@ const catalog = [
     env: "STRIPE_PRICE_PRO",
     name: "Harbor Pro",
     amount: 1900,
+    tax: "txcd_10103000",
+  },
+  {
+    env: "STRIPE_PRICE_SELLER",
+    name: "Online Seller Profit Tracker spreadsheet",
+    amount: 1400,
+  },
+  {
+    env: "STRIPE_PRICE_RECONCILE",
+    name: "Transaction Reconciliation Matcher spreadsheet",
+    amount: 1400,
+  },
+  {
+    env: "STRIPE_PRICE_PROJECT",
+    name: "Project Management Tracker spreadsheet",
+    amount: 1400,
   },
 ];
 
@@ -49,7 +64,7 @@ for (const item of catalog) {
   const product = await stripe.products.create({
     name: item.name,
     metadata: { harbor: "true" },
-    tax_code: "txcd_10103000",
+    tax_code: item.tax ?? "txcd_10202000",
   });
   const price = await stripe.prices.create({
     product: product.id,

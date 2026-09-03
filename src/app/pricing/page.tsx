@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { brand } from "../../config/brand";
 import { formatPrice, offers, PRICES, templateOffer } from "../../config/pricing";
-import { coreProducts } from "../../data/products";
+import { coreProducts, extraProducts } from "../../data/products";
 import { Container } from "../../components/layout/Container";
 import { PricingActions } from "./PricingActions";
 import { BuyButton } from "../../components/monetization/BuyButton";
@@ -110,6 +110,23 @@ export default function PricingPage() {
       <p className="mt-2 text-muted">Same files as the bundle, sold one at a time.</p>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         {coreProducts.map((p) => (
+          <Card key={p.id} className="p-5">
+            <h3 className="font-medium text-ink">{p.name}</h3>
+            <p className="mt-1 text-sm text-muted">{p.blurb}</p>
+            <BuyButton
+              offer={templateOffer(p.id, p.name, p.blurb)}
+              label={`Get the Full Spreadsheet — ${formatPrice(PRICES.spreadsheet)}`}
+              size="sm"
+              className="mt-3"
+            />
+          </Card>
+        ))}
+      </div>
+
+      <h2 className="mt-16 font-serif text-2xl">Also available — {formatPrice(PRICES.spreadsheet)} each</h2>
+      <p className="mt-2 text-muted">Not included in the bundle.</p>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {extraProducts.map((p) => (
           <Card key={p.id} className="p-5">
             <h3 className="font-medium text-ink">{p.name}</h3>
             <p className="mt-1 text-sm text-muted">{p.blurb}</p>
