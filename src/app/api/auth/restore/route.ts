@@ -19,7 +19,8 @@ export async function POST(req: Request) {
     if (grants.length === 0) {
       return NextResponse.json({
         ok: true,
-        message: "If we find a purchase for that email, you’ll get a restore link here.",
+        message:
+          "No live purchase found for that email. Use the exact address on your Stripe receipt. Earlier test-card payments (4242) don’t restore on the live site.",
       });
     }
 
