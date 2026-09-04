@@ -57,9 +57,9 @@ export default function PrivacyPage() {
         <section className="space-y-3">
           <h2 className="font-serif text-2xl text-ink">Email</h2>
           <p>
-            Email is optional except at Stripe Checkout if you buy something. You may also type an email to send
-            yourself a calculator snapshot, or on Restore to look up paid checkouts for that address. Restore shows a
-            one-time link on the page after that check — we don’t email the link.
+            Email is optional except at Stripe Checkout if you buy something. If you click Email me my results, we send
+            that snapshot to the address you enter. Restore looks up paid checkouts for an address and shows a one-time
+            link on the page — we don’t email the restore link.
           </p>
         </section>
 

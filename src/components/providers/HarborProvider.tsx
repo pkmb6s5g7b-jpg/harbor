@@ -13,7 +13,6 @@ import { type Offer } from "../../config/pricing";
 import type { ToolSlug } from "../../data/tools";
 import { resolveOffer } from "../../lib/commerce/resolve-offer";
 import { expandGrants, hasAccess } from "../../lib/commerce/entitlements";
-import { emailService } from "../../lib/email/service";
 import { localStorageAdapter } from "../../lib/storage/local";
 import type { Plan } from "../../lib/storage/types";
 import { EmailCapture } from "../monetization/EmailCapture";
@@ -139,12 +138,26 @@ export function HarborProvider({ children }: { children: ReactNode }) {
         onClose={() => setEmailOpen(false)}
         onSubmit={async (email, name) => {
           localStorageAdapter.addEmail(email, name);
-          await emailService.sendPlan({
-            email,
-            name,
-            tool: emailCtx?.tool ?? "",
-            summary: emailCtx?.summary ?? "",
+          const res = await fetch("/api/email/results", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              name,
+              tool: emailCtx?.tool ?? "",
+              summary: emailCtx?.summary ?? "",
+            }),
           });
+          const raw = await res.text();
+          let data: { error?: string } = {};
+          try {
+            data = raw ? (JSON.parse(raw) as { error?: string }) : {};
+          } catch {
+            data = { error: "Could not send that email." };
+          }
+          if (!res.ok) {
+            throw new Error(data.error ?? "Could not send that email.");
+          }
         }}
       />
     </HarborContext.Provider>

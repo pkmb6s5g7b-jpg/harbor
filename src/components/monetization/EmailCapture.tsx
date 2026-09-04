@@ -22,13 +22,20 @@ export function EmailCapture({
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
     setBusy(true);
-    await onSubmit(email.trim(), name.trim() || undefined);
-    setBusy(false);
-    setDone(true);
+    try {
+      await onSubmit(email.trim(), name.trim() || undefined);
+      setDone(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send that email.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   function close() {
@@ -37,11 +44,11 @@ export function EmailCapture({
   }
 
   return (
-    <Modal open={open} onClose={close} title={done ? "You’re on the list" : "Email me my results"}>
+    <Modal open={open} onClose={close} title={done ? "Sent" : "Email me my results"}>
       {done ? (
         <div>
           <p className="text-sm text-muted">
-            We’ll send a summary of your {tool} plan to {email}. No spam — unsubscribe anytime.
+            A snapshot of your {tool} plan is on its way to {email}.
           </p>
           <p className="mt-3 rounded-xl bg-page p-3 text-sm text-ink">{summary}</p>
           <Button className="mt-5 w-full" onClick={close}>
@@ -67,10 +74,11 @@ export function EmailCapture({
               autoComplete="email"
             />
           </Field>
+          {error ? <p className="text-sm text-red-fg">{error}</p> : null}
           <Button type="submit" className="w-full" disabled={busy}>
-            {busy ? "Saving…" : "Email my results"}
+            {busy ? "Sending…" : "Email my results"}
           </Button>
-          <p className="text-xs text-muted">We’ll send a summary of this plan. No spam, unsubscribe anytime.</p>
+          <p className="text-xs text-muted">We’ll email a summary of this plan. No spam.</p>
         </form>
       )}
     </Modal>
