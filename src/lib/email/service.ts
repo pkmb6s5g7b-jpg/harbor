@@ -27,6 +27,7 @@ export async function sendPlan(payload: EmailPayload): Promise<void> {
     body: JSON.stringify({
       from: fromAddress(),
       to: [payload.email],
+      reply_to: readEnv("RESULTS_REPLY_TO") || "harborplans@outlook.com",
       subject: `Your ${payload.tool} plan`,
       text,
     }),
