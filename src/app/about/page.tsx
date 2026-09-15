@@ -41,6 +41,10 @@ export default function AboutPage() {
           <Link href="/terms" className="font-medium text-navy underline-offset-2 hover:underline">
             Terms
           </Link>
+          . Questions about a purchase or the tools:{" "}
+          <a href={`mailto:${brand.supportEmail}`} className="font-medium text-navy underline-offset-2 hover:underline">
+            {brand.supportEmail}
+          </a>
           .
         </p>
       </div>

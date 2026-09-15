@@ -14,6 +14,12 @@ export function Footer() {
           <p className="mt-4 max-w-sm text-xs text-muted">
             Plans stay in this browser unless you email them. Harbor is a planning tool, not financial advice.
           </p>
+          <p className="mt-3 text-sm text-ink">
+            Questions:{" "}
+            <a href={`mailto:${brand.supportEmail}`} className="font-medium text-navy underline-offset-2 hover:underline">
+              {brand.supportEmail}
+            </a>
+          </p>
         </div>
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-muted">Tools</p>
@@ -93,6 +99,9 @@ export function Footer() {
             <Link href="/terms" className="hover:text-navy">
               Terms
             </Link>
+            <a href={`mailto:${brand.supportEmail}`} className="hover:text-navy">
+              {brand.supportEmail}
+            </a>
             <span>Free calculators. Paid templates. Bundle is the best value.</span>
           </span>
         </Container>

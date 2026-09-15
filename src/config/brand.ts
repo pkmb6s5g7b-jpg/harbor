@@ -6,6 +6,7 @@ export const brand = {
   proPrice: 19,
   proPriceLabel: "$19",
   url: "https://getharborplans.com",
+  supportEmail: "harborplans@outlook.com",
 } as const;
 
 export const storageKeys = {

@@ -88,11 +88,15 @@ export default function PrivacyPage() {
         <section className="space-y-3">
           <h2 className="font-serif text-2xl text-ink">Questions</h2>
           <p>
-            There is no separate support inbox yet. For a purchase, use the email on your Stripe receipt and{" "}
+            Email{" "}
+            <a href={`mailto:${brand.supportEmail}`} className="font-medium text-navy underline-offset-2 hover:underline">
+              {brand.supportEmail}
+            </a>
+            . For a purchase you can also{" "}
             <Link href="/restore" className="font-medium text-navy underline-offset-2 hover:underline">
               Restore
-            </Link>
-            . See also{" "}
+            </Link>{" "}
+            with your Stripe receipt. See{" "}
             <Link href="/terms" className="font-medium text-navy underline-offset-2 hover:underline">
               Terms
             </Link>

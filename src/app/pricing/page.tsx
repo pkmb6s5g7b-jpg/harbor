@@ -159,7 +159,11 @@ export default function PricingPage() {
         ))}
       </dl>
       <p className="mt-8 text-xs text-muted">
-        Template and Pro purchases go through Stripe Checkout. {brand.name} Pro is {formatPrice(PRICES.pro)} once and
+        Questions:{" "}
+        <a href={`mailto:${brand.supportEmail}`} className="text-navy underline-offset-2 hover:underline">
+          {brand.supportEmail}
+        </a>
+        . Template and Pro purchases go through Stripe Checkout. {brand.name} Pro is {formatPrice(PRICES.pro)} once and
         does not include the spreadsheet files. See{" "}
         <a href="/privacy" className="text-navy underline-offset-2 hover:underline">
           Privacy
