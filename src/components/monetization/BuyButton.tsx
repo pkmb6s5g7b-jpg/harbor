@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { formatPrice, STRIPE_CHECKOUT_OFFER_IDS, type Offer } from "../../config/pricing";
+import { formatPrice, type Offer } from "../../config/pricing";
 import { goToStripeCheckout } from "../../lib/commerce/start-checkout";
 import { useHarbor } from "../providers/HarborProvider";
 import { Button, ButtonLink } from "../ui/Button";
@@ -19,11 +19,10 @@ export function BuyButton({
   className?: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const { hasTemplate, isPro, openCheckout } = useHarbor();
+  const { hasTemplate, isPro } = useHarbor();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const owned = offer.kind === "pro" ? isPro : offer.grants.every((g) => hasTemplate(g));
-  const usesStripe = (STRIPE_CHECKOUT_OFFER_IDS as readonly string[]).includes(offer.id);
 
   if (owned) {
     if (offer.kind === "pro") {
@@ -47,13 +46,9 @@ export function BuyButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ offerId: offer.id }),
       });
-      const data = (await res.json()) as { url?: string; error?: string; mode?: string };
+      const data = (await res.json()) as { url?: string; error?: string };
       if (data.url) {
         goToStripeCheckout(data.url);
-        return;
-      }
-      if (data.mode === "placeholder") {
-        openCheckout(offer.id);
         return;
       }
       setError(data.error ?? "Could not start checkout.");
@@ -72,7 +67,7 @@ export function BuyButton({
         size={size}
         className="w-full"
         disabled={busy}
-        onClick={() => (usesStripe ? startStripe() : openCheckout(offer.id))}
+        onClick={() => void startStripe()}
       >
         {busy ? "Redirecting to Stripe…" : (label ?? `Get the Full Spreadsheet — ${formatPrice(offer.price)}`)}
       </Button>

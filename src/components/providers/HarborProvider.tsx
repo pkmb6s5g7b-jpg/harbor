@@ -9,14 +9,11 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import { type Offer } from "../../config/pricing";
 import type { ToolSlug } from "../../data/tools";
-import { resolveOffer } from "../../lib/commerce/resolve-offer";
-import { expandGrants, hasAccess } from "../../lib/commerce/entitlements";
+import { hasAccess } from "../../lib/commerce/entitlements";
 import { localStorageAdapter } from "../../lib/storage/local";
 import type { Plan } from "../../lib/storage/types";
 import { EmailCapture } from "../monetization/EmailCapture";
-import { MockCheckout } from "../monetization/MockCheckout";
 
 type EmailCtx = { tool: string; summary: string };
 
@@ -25,7 +22,6 @@ type HarborContextValue = {
   purchases: string[];
   hasTemplate: (id: string) => boolean;
   setPro: (v: boolean) => void;
-  openCheckout: (offerId?: string) => void;
   openEmail: (ctx: EmailCtx) => void;
   listPlans: (tool?: ToolSlug) => Plan[];
   savePlan: (plan: Plan) => { ok: true } | { ok: false; reason: "pro-required" };
@@ -66,8 +62,6 @@ export function HarborProvider({ children }: { children: ReactNode }) {
     getPurchasesSnapshot,
     () => EMPTY_PURCHASES,
   );
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [offer, setOffer] = useState<Offer | null>(null);
   const [emailOpen, setEmailOpen] = useState(false);
   const [emailCtx, setEmailCtx] = useState<EmailCtx | null>(null);
   const [tick, setTick] = useState(0);
@@ -85,10 +79,6 @@ export function HarborProvider({ children }: { children: ReactNode }) {
       purchases,
       hasTemplate: (id: string) => hasAccess(purchases, id),
       setPro,
-      openCheckout: (offerId = "pro") => {
-        setOffer(resolveOffer(offerId) ?? null);
-        setCheckoutOpen(true);
-      },
       openEmail: (ctx) => {
         setEmailCtx(ctx);
         setEmailOpen(true);
@@ -114,23 +104,6 @@ export function HarborProvider({ children }: { children: ReactNode }) {
   return (
     <HarborContext.Provider value={value}>
       {children}
-      <MockCheckout
-        open={checkoutOpen}
-        offer={offer}
-        onClose={() => setCheckoutOpen(false)}
-        onPaid={async (grants, email, name) => {
-          const expanded = expandGrants(grants);
-          if (expanded.includes("pro")) setPro(true);
-          localStorageAdapter.addPurchases(expanded);
-          if (email) localStorageAdapter.addEmail(email, name);
-          window.dispatchEvent(new Event(BUY_EVENT));
-          await fetch("/api/entitlements", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ skus: expanded, email }),
-          });
-        }}
-      />
       <EmailCapture
         open={emailOpen}
         tool={emailCtx?.tool ?? ""}

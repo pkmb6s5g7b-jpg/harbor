@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
   const usesStripe = (STRIPE_CHECKOUT_OFFER_IDS as readonly string[]).includes(offer.id);
   if (!usesStripe) {
-    return NextResponse.json({ mode: "placeholder", offerId: offer.id });
+    return NextResponse.json({ error: "This product is not available for checkout." }, { status: 400 });
   }
 
   const cancelPath = offer.kind === "pro" ? "/pricing" : "/cancel";
