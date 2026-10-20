@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
 import { STRIPE_CHECKOUT_OFFER_IDS } from "../../../config/pricing";
 import { resolveOffer } from "../../../lib/commerce/resolve-offer";
 import { getStripe, getStripePriceId, siteOrigin, stripeConfigured } from "../../../lib/stripe";
@@ -48,6 +47,11 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_creation: "always",
+      allow_promotion_codes: true,
+      // Collects the address fields Stripe Tax needs (country, and postal code where required).
+      // `auto` is that minimum. A full street address is not required for these digital goods.
+      automatic_tax: { enabled: true },
+      billing_address_collection: "auto",
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}${cancelPath}`,
@@ -55,9 +59,9 @@ export async function POST(req: Request) {
         offerId: offer.id,
         grants: offer.grants.join(","),
       },
-      // Digital goods: don't require Stripe Managed Payments tax codes.
+      // Digital goods stay on Stripe Tax, not Managed Payments.
       managed_payments: { enabled: false },
-    } as Parameters<Stripe["checkout"]["sessions"]["create"]>[0]);
+    });
 
     if (!session.url) {
       return NextResponse.json({ error: "Stripe did not return a Checkout URL." }, { status: 502 });

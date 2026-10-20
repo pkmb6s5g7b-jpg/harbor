@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { formatPrice, PRICES } from "../../config/pricing";
 import { tools } from "../../data/tools";
-import { goToStripeCheckout, startStripeCheckout } from "../../lib/commerce/start-checkout";
 import { useHarbor } from "../providers/HarborProvider";
 import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
+import { ButtonLink } from "../ui/Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
 
@@ -26,14 +26,6 @@ export function Header() {
   const pathname = usePathname();
   const { isPro } = useHarbor();
   const [open, setOpen] = useState(false);
-  const [proBusy, setProBusy] = useState(false);
-
-  async function buyPro() {
-    setProBusy(true);
-    const { url } = await startStripeCheckout("pro");
-    if (url) goToStripeCheckout(url);
-    else setProBusy(false);
-  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-line-soft bg-white/90 backdrop-blur">
@@ -62,9 +54,9 @@ export function Header() {
           {isPro ? (
             <Badge tone="teal">Pro</Badge>
           ) : (
-            <Button size="sm" className="hidden sm:inline-flex" disabled={proBusy} onClick={buyPro}>
-              {proBusy ? "Redirecting…" : "Unlock Pro"}
-            </Button>
+            <ButtonLink href="/pro" size="sm" className="hidden sm:inline-flex">
+              Unlock Pro
+            </ButtonLink>
           )}
           <button
             type="button"
@@ -117,15 +109,9 @@ export function Header() {
               </Link>
             ))}
             {!isPro ? (
-              <Button
-                className="mt-2"
-                onClick={() => {
-                  setOpen(false);
-                  buyPro();
-                }}
-              >
-                Unlock Pro — $19
-              </Button>
+              <ButtonLink href="/pro" className="mt-2" onClick={() => setOpen(false)}>
+                Unlock Pro — {formatPrice(PRICES.pro)}
+              </ButtonLink>
             ) : null}
           </Container>
         </div>

@@ -150,8 +150,8 @@ export default function HomePage() {
               Save named plans, export reports, compare Snowball vs Avalanche. Still no subscription.
             </p>
           </div>
-          <ButtonLink href="/pricing" variant="secondary">
-            See what’s included
+          <ButtonLink href="/pro" variant="secondary">
+            See Harbor Pro
           </ButtonLink>
         </Container>
       </section>

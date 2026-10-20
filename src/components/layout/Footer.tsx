@@ -62,6 +62,11 @@ export function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/pro" className="text-ink hover:text-navy">
+                Harbor Pro
+              </Link>
+            </li>
+            <li>
               <Link href="/pricing" className="text-ink hover:text-navy">
                 Pricing
               </Link>

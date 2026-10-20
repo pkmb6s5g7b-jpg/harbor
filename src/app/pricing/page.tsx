@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { brand } from "../../config/brand";
 import { formatPrice, offers, PRICES, templateOffer } from "../../config/pricing";
 import { coreProducts, extraProducts } from "../../data/products";
@@ -85,6 +86,11 @@ export default function PricingPage() {
           </ul>
           <div className="mt-6">
             <PricingActions />
+            <p className="mt-3 text-sm">
+              <Link href="/pro" className="font-medium text-navy underline-offset-2 hover:underline">
+                What Harbor Pro includes
+              </Link>
+            </p>
           </div>
         </Card>
         <Card className="border-navy/20 p-6">
