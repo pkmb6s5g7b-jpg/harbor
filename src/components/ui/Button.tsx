@@ -52,25 +52,26 @@ export function ButtonLink({
   className = "",
   children,
   download,
-}: Common & { href: string; download?: boolean | string }) {
+  onClick,
+}: Common & { href: string; download?: boolean | string; onClick?: () => void }) {
   const cls = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
   if (download) {
     const filename = typeof download === "string" ? download : true;
     return (
-      <a href={href} className={cls} download={filename}>
+      <a href={href} className={cls} download={filename} onClick={onClick}>
         {children}
       </a>
     );
   }
   if (href.startsWith("http")) {
     return (
-      <a href={href} className={cls} target="_blank" rel="noreferrer">
+      <a href={href} className={cls} target="_blank" rel="noreferrer" onClick={onClick}>
         {children}
       </a>
     );
   }
   return (
-    <Link href={href} className={cls}>
+    <Link href={href} className={cls} onClick={onClick}>
       {children}
     </Link>
   );

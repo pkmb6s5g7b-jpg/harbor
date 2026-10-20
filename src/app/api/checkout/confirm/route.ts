@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { ENTITLEMENT_COOKIE } from "../../../../config/pricing";
 import { products } from "../../../../data/products";
 import { expandGrants, hasAccess, parseEntitlementCookie, serializeEntitlements } from "../../../../lib/commerce/entitlements";
-import { recordPurchase } from "../../../../lib/commerce/purchases";
+import { purchaseFromCheckoutSession, recordPurchase } from "../../../../lib/commerce/purchases";
 import { getStripe, stripeConfigured } from "../../../../lib/stripe";
 
 export const runtime = "nodejs";
@@ -30,21 +30,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const offerId = session.metadata?.offerId ?? "";
-    const grants = expandGrants((session.metadata?.grants ?? "").split(",").filter(Boolean));
+    const row = purchaseFromCheckoutSession(session);
+    const offerId = row?.offerId ?? session.metadata?.offerId ?? "";
+    const grants = row?.grants ?? [];
+    if (row) {
+      try {
+        await recordPurchase(row);
+      } catch (err) {
+        // The buyer still unlocks. The webhook returns 500 so Stripe retries the log.
+        console.error("recordPurchase failed during confirm", err);
+      }
+    }
     if (grants.length === 0) {
       return NextResponse.json({ error: "Session is missing product metadata" }, { status: 400 });
     }
-
-    await recordPurchase({
-      sessionId: session.id,
-      offerId,
-      grants,
-      email: session.customer_details?.email ?? session.customer_email ?? null,
-      amountTotal: session.amount_total,
-      currency: session.currency,
-      paidAt: new Date().toISOString(),
-    });
 
     const jar = await cookies();
     const existing = parseEntitlementCookie(jar.get(ENTITLEMENT_COOKIE)?.value);

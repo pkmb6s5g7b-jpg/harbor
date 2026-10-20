@@ -113,7 +113,11 @@ Prices in the UI come from `src/config/pricing.ts` (`PRICES`). Stripe Price IDs 
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-Put the `whsec_…` value in `STRIPE_WEBHOOK_SECRET`. The endpoint verifies the signature and records `checkout.session.completed` in `.data/purchases.json` (gitignored). The success page also confirms the session server-side, so downloads work even if the CLI isn’t running.
+Put the `whsec_…` value in `STRIPE_WEBHOOK_SECRET`. The endpoint verifies the signature and, when `payment_status` is `paid`, writes one sales row for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. The same session id is stored only once.
+
+On Vercel that row is a private Blob at `sales/{sessionId}.json`. Connect a **private** Blob store to the project (`BLOB_STORE_ID` via the project’s OIDC token) or set `BLOB_READ_WRITE_TOKEN`. Blob is usage-priced after the included allowance. Without a store, the handler writes `.data/purchases.json` (gitignored). That file is not durable on Vercel’s read-only filesystem, and the webhook answers **500** so Stripe retries until the store is connected.
+
+The success page also confirms the session server-side, so downloads work even if the CLI isn’t running.
 
 Trigger a test event:
 
@@ -152,7 +156,7 @@ The link is one-time and expires in 30 minutes. No password.
 
 ## Harbor Pro
 
-Pro ($19) is a one-time Stripe Checkout unlock (save plans, CSV, comparison). It does **not** include spreadsheet files. Price ID: `STRIPE_PRICE_PRO`. Use Restore to bring Pro to another device.
+Pro ($19) is a one-time Stripe Checkout unlock (save plans, CSV, comparison). It does **not** include spreadsheet files. The offer page is `/pro`. Price ID: `STRIPE_PRICE_PRO`. Use Restore to bring Pro to another device.
 
 ## Brand
 

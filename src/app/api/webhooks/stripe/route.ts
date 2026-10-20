@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
+import type Stripe from "stripe";
+import { purchaseFromCheckoutSession, recordPurchase } from "../../../../lib/commerce/purchases";
+import { getStripe } from "../../../../lib/stripe";
 
 export const runtime = "nodejs";
-import { expandGrants } from "../../../../lib/commerce/entitlements";
-import { recordPurchase } from "../../../../lib/commerce/purchases";
-import { getStripe } from "../../../../lib/stripe";
 
 /**
  * Stripe CLI (local):
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   }
 
   const raw = await req.text();
-  let event;
+  let event: Stripe.Event;
   try {
     event = getStripe().webhooks.constructEvent(raw, signature, secret);
   } catch (err) {
@@ -30,19 +30,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    if (session.payment_status === "paid" || session.status === "complete") {
-      const grants = expandGrants((session.metadata?.grants ?? "").split(",").filter(Boolean));
-      await recordPurchase({
-        sessionId: session.id,
-        offerId: session.metadata?.offerId ?? "",
-        grants,
-        email: session.customer_details?.email ?? session.customer_email ?? null,
-        amountTotal: session.amount_total,
-        currency: session.currency,
-        paidAt: new Date().toISOString(),
-      });
+  if (
+    event.type === "checkout.session.completed" ||
+    event.type === "checkout.session.async_payment_succeeded"
+  ) {
+    const row = purchaseFromCheckoutSession(event.data.object);
+    if (row) {
+      try {
+        await recordPurchase(row);
+      } catch (err) {
+        console.error("recordPurchase failed", err);
+        return NextResponse.json({ error: "Could not record this sale" }, { status: 500 });
+      }
     }
   }
 
