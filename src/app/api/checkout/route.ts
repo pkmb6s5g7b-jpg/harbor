@@ -8,7 +8,30 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const body = (await req.json()) as { offerId?: string };
+  try {
+    return await createCheckoutSession(req);
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
+    const message = err instanceof Error && err.message ? err.message : "Could not start checkout.";
+    const safeMessage = redactSecrets(message);
+    console.error("checkout failed", err instanceof Error ? err.name : "Error", safeMessage);
+    return NextResponse.json({ error: safeMessage }, { status: 500 });
+  }
+}
+
+function redactSecrets(message: string): string {
+  return message
+    .replace(/(?:sk|rk|pk)_(?:live|test)_[A-Za-z0-9]+/g, "[redacted]")
+    .replace(/whsec_[A-Za-z0-9]+/g, "[redacted]");
+}
+
+async function createCheckoutSession(req: Request) {
+  const body = (await req.json()) as { offerId?: string } | null;
+  if (!body || typeof body !== "object") {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
   const offerId = body.offerId ?? "";
   const offer = resolveOffer(offerId);
   if (!offer) {

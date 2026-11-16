@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/calc/*.test.ts",
+    "test": "tsx --experimental-test-module-mocks --test src/lib/calc/*.test.ts src/lib/commerce/*.test.ts",
     "stripe:products": "node scripts/create-stripe-products.mjs"
   },
   "dependencies": {
